@@ -50,8 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Quirky Series Ultimate\_Scripts\RotateOnScroll.cs" />
+    <Compile Include="Assets\@MyAssets\Scripts\SnakeMovement.cs" />
     <Compile Include="Assets\@MyAssets\Scripts\ImageTrackingGameSpawner.cs" />
     <Compile Include="Assets\Quirky Series Ultimate\_Scripts\QuirkySeriesDemo.cs" />
+    <Compile Include="Assets\@MyAssets\Scripts\FoodSpawner.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
   </ItemGroup>
   <ItemGroup>
