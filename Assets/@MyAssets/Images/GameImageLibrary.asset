@@ -26,4 +26,4 @@ MonoBehaviour:
     m_Size: {x: 0.15, y: 0.15}
     m_SpecifySize: 1
     m_Name: snakescales
-    m_Texture: {fileID: 0}
+    m_Texture: {fileID: 2800000, guid: ef97f63a0d8b8da459597fecf5b40be9, type: 3}
