@@ -23,7 +23,27 @@ MonoBehaviour:
     m_SerializedTextureGuid:
       m_GuidLow: 10206297550199715386
       m_GuidHigh: 16792714603908782425
-    m_Size: {x: 0.15, y: 0.15}
+    m_Size: {x: 0.15, y: 0.112500004}
     m_SpecifySize: 1
-    m_Name: snakescales
+    m_Name: SnakeMarker
     m_Texture: {fileID: 2800000, guid: ef97f63a0d8b8da459597fecf5b40be9, type: 3}
+  - m_SerializedGuid:
+      m_GuidLow: 5088118283506966541
+      m_GuidHigh: 239620347997058989
+    m_SerializedTextureGuid:
+      m_GuidLow: 12845479400898044545
+      m_GuidHigh: 10737252700863556057
+    m_Size: {x: 0.2, y: 0.11223629}
+    m_SpecifySize: 1
+    m_Name: DinoMarker
+    m_Texture: {fileID: 2800000, guid: f42022814f74b244d969936a71620295, type: 3}
+  - m_SerializedGuid:
+      m_GuidLow: 5659759504838117414
+      m_GuidHigh: 16059054079738710709
+    m_SerializedTextureGuid:
+      m_GuidLow: 3937442159521393330
+      m_GuidHigh: 13782561892706613466
+    m_Size: {x: 0.2, y: 0.13544305}
+    m_SpecifySize: 1
+    m_Name: SparrowMarker
+    m_Texture: {fileID: 2800000, guid: 59eb6ab29ac836a4daf89cad047f45bf, type: 3}

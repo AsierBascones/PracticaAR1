@@ -1,69 +1,68 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 public class ImageTrackingGameSpawner : MonoBehaviour
 {
-    [Header("Componentes AR")]
-    [SerializeField] private ARTrackedImageManager trackedImageManager;
+    public ARTrackedImageManager imageManager;
 
-    [Header("Juegos")]
-    [SerializeField] private GameObject snakeGamePrefab;
-    [SerializeField] private string snakeMarkerName = "SnakeMarker";
+    [Header("Juegos asignados a cada marcador")]
+    public GameObject gameSnake;     // SnakeGame_Prefab
+    public GameObject gameDino;      // Prefab o contenido del marcador 2
+    public GameObject gamePinball;   // Prefab o contenido del marcador 3
 
-    // Instancia activa para no duplicar el juego al volver a detectar la imagen
-    private GameObject spawnedSnakeGame;
+    [Header("Música / Audios de cada juego")]
+    public AudioSource bgmSnake;
+    public AudioSource bgmDino;
+    public AudioSource bgmPinball;
 
-    private void Awake()
+    void OnEnable() => imageManager.trackablesChanged.AddListener(OnChanged);
+    void OnDisable() => imageManager.trackablesChanged.RemoveListener(OnChanged);
+
+    void OnChanged(ARTrackablesChangedEventArgs<ARTrackedImage> eventArgs)
     {
-        if (trackedImageManager == null)
-            trackedImageManager = GetComponent<ARTrackedImageManager>();
+        foreach (var img in eventArgs.added) UpdateGame(img);
+        foreach (var img in eventArgs.updated) UpdateGame(img);
     }
 
-    private void OnEnable()
+    void UpdateGame(ARTrackedImage img)
     {
-        trackedImageManager.trackablesChanged.AddListener(OnTrackedImagesChanged);
-    }
+        bool isTracking = (img.trackingState == TrackingState.Tracking);
+        string name = img.referenceImage.name;
 
-    private void OnDisable()
-    {
-        trackedImageManager.trackablesChanged.RemoveListener(OnTrackedImagesChanged);
-    }
-
-    private void OnTrackedImagesChanged(ARTrackablesChangedEventArgs<ARTrackedImage> eventArgs)
-    {
-        // 1. Nuevas imágenes detectadas por primera vez
-        foreach (ARTrackedImage trackedImage in eventArgs.added)
+        if (name == "SnakeMarker")
         {
-            CheckAndSpawnGame(trackedImage);
+            PositionGame(gameSnake, img, isTracking);
+            ManageAudio(bgmSnake, isTracking);
         }
-
-        // 2. Imágenes cuyo estado o posición se actualiza
-        foreach (ARTrackedImage trackedImage in eventArgs.updated)
+        else if (name == "DinoMarker")
         {
-            UpdateGameState(trackedImage);
+            PositionGame(gameDino, img, isTracking);
+            ManageAudio(bgmDino, isTracking);
         }
-    }
-
-    private void CheckAndSpawnGame(ARTrackedImage trackedImage)
-    {
-        if (trackedImage.referenceImage.name == snakeMarkerName && spawnedSnakeGame == null)
+        else if (name == "SparrowMarker")
         {
-            // Instanciar el prefab como hijo de la imagen trackeada
-            spawnedSnakeGame = Instantiate(snakeGamePrefab, trackedImage.transform);
-            spawnedSnakeGame.transform.localPosition = Vector3.zero;
-            spawnedSnakeGame.transform.localRotation = Quaternion.identity;
+            PositionGame(gamePinball, img, isTracking);
+            ManageAudio(bgmPinball, isTracking);
         }
     }
-
-    private void UpdateGameState(ARTrackedImage trackedImage)
+    void PositionGame(GameObject game, ARTrackedImage img, bool active)
     {
-        if (trackedImage.referenceImage.name == snakeMarkerName && spawnedSnakeGame != null)
-        {
-            // Ocultar o pausar si se pierde la vista directa del marcador
-            bool isTracking = trackedImage.trackingState == TrackingState.Tracking;
-            spawnedSnakeGame.SetActive(isTracking);
-        }
+        if (game == null) return;
+
+        game.transform.SetParent(img.transform);
+        // 0.005f levanta el minijuego 5 milímetros respecto al papel/mesa
+        game.transform.localPosition = new Vector3(0f, 0.005f, 0f);
+        game.transform.localRotation = Quaternion.identity;
+        game.transform.localScale = Vector3.one;
+
+        game.SetActive(active);
+    }
+
+    void ManageAudio(AudioSource src, bool play)
+    {
+        if (src == null) return;
+        if (play && !src.isPlaying) src.Play();
+        else if (!play && src.isPlaying) src.Pause();
     }
 }
